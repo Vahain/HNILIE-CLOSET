@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!--
+  ============================================================
+  SHOP GIA LINH - HOMEPAGE
+  ============================================================
+  To change shop name: search "Shop Gia Linh" and replace
+  To change colors: edit assets/css/style.css → :root variables
+  To add products: edit assets/js/products.js
+  ============================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hnilie Closet - Thuê & Mua Đồ Thời Trang Nữ</title>
+  <meta name="description" content="Shop thời trang nữ - thuê và mua đầm, váy, áo dài. Phong cách thanh lịch, giá tốt tại TP.Hà Nội">
+
+  <!-- ── FAVICON (replace with your logo file) ── -->
+  <link rel="icon" type="image/svg+xml" href="/assets/images/logo.png">
+
+  <!-- ── FONTS ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ── FONT AWESOME (icons) ── -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- ── AOS (scroll animations) ── -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+  <!-- ── SWIPER (sliders) ── -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+
+  <!-- ── FLATPICKR (date picker) ── -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+
+  <!-- ── ANIMATE.CSS ── -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+  <!-- ── MAIN STYLESHEET ── -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+
+<!-- ============================================================
+     PAGE LOADER
+     Shows a loading animation while page loads
+============================================================ -->
+<div class="page-loader">
+  <div class="loader-logo">Hnilie Closet</div>
+  <div class="loader-spinner"></div>
+</div>
+
+<!-- ============================================================
+     NOTIFICATION CONTAINER
+     Toasts appear here (top-right corner)
+============================================================ -->
+<div class="notification-container" id="notifContainer"></div>
+
+<!-- ============================================================
+     NAVIGATION BAR
+     To change menu items: edit the <li> tags below
+============================================================ -->
+<nav class="navbar">
+  <!-- Logo — change "Shop Gia Linh" to your shop name -->
+  <a href="/pages/index.html" class="navbar-brand" style="display:flex;align-items:center;gap:10px;">
+    <img src="/assets/images/logo.png" alt="Hnilie Closet Logo"
+         style="height:46px;width:46px;object-fit:contain;border-radius:50%;">
+    <span style="font-family:var(--font-display);font-size:1.4rem;color:var(--pink-dark);">Hnilie Closet</span>
+  </a>
+
+  <!-- Desktop menu links -->
+  <ul class="nav-links">
+    <li><a href="#hero">Trang chủ</a></li>
+    <li><a href="#featured">Nổi bật</a></li>
+    <li><a href="#products">Sản phẩm</a></li>
+    <li><a href="#rental-guide">Hướng dẫn thuê</a></li>
+    <li><a href="#contact">Liên hệ</a></li>
+    <li><a href="/pages/checkout.html" class="btn-outline btn-sm">Đặt hàng</a></li>
+  </ul>
+
+  <!-- Right side: Cart + Mobile menu -->
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <!-- Cart button — data-open-cart triggers the cart sidebar -->
+    <button class="nav-cart" data-open-cart aria-label="Giỏ hàng">
+      <i class="fas fa-bag-shopping"></i>
+      <span class="cart-badge" style="display:none;">0</span>
+    </button>
+    <!-- Mobile hamburger -->
+    <button class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO BANNER
+     Edit the text below to change the hero section
+============================================================ -->
+<section class="hero" id="hero">
+  <div class="container-custom" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%;">
+
+    <!-- Hero text content -->
+    <div class="hero-content animate__animated animate__fadeInLeft">
+      <!-- Small badge above title -->
+      <div class="hero-badge">
+        <i class="fas fa-sparkles"></i>
+        <!-- Change this text as needed -->
+        Thời trang nữ cao cấp tại TP.Hà Nội
+      </div>
+
+      <!-- Main headline — change to your desired text -->
+      <h1>
+        Thuê & Mua<br>
+        <em>Thời Trang</em><br>
+        Đẳng Cấp
+      </h1>
+
+      <!-- Subheading description -->
+      <p>
+        Khám phá bộ sưu tập đầm, váy, áo dài sang trọng.
+        Thuê chỉ từ <strong style="color:var(--pink-dark);">50,000₫/ngày</strong> hoặc mua sở hữu vĩnh viễn.
+        Giao hàng toàn TP.Hà Nội.
+      </p>
+
+      <!-- Call-to-action buttons -->
+      <div class="hero-actions">
+        <a href="#products" class="btn-primary animate__animated animate__pulse animate__infinite animate__slow">
+          <i class="fas fa-bag-shopping"></i>
+          Khám phá ngay
+        </a>
+        <a href="#rental-guide" class="btn-outline">
+          <i class="fas fa-calendar-days"></i>
+          Cách thuê đồ
+        </a>
+      </div>
+
+      <!-- Trust indicators -->
+      <div style="display:flex;gap:2rem;margin-top:2.5rem;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--gray-text);">
+          <i class="fas fa-shield-check" style="color:var(--pink-dark);"></i>
+          Chất lượng đảm bảo
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--gray-text);">
+          <i class="fas fa-truck-fast" style="color:var(--pink-dark);"></i>
+          Giao hàng nhanh
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--gray-text);">
+          <i class="fas fa-rotate-left" style="color:var(--pink-dark);"></i>
+          Đổi trả dễ dàng
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero visual — right side with floating cards -->
+    <div class="hero-visual animate__animated animate__fadeInRight">
+      <div style="position:relative;display:inline-block;">
+        <!-- Main hero image frame with slider -->
+        <div class="hero-image-frame">
+          <!-- Swiper for hero images -->
+          <div class="swiper hero-swiper" style="height:100%;">
+            <div class="swiper-wrapper">
+              <!--
+                Hero slider images.
+                Replace these with your own outfit photos.
+                Image path: public/clothes/[folder]/[image]
+              -->
+              <div class="swiper-slide" style="position:relative;overflow:hidden;">
+                <img src="https://img.upanhnhanh.com/c327848c84b128f74cb08cdf48459b05"
+                     alt="Váy đi biển "
+                     style="width:100%;height:100%;object-fit:cover;display:block;">
+                <!-- Label overlay -->
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.25rem;
+                            background:linear-gradient(to top,rgba(45,27,30,.55),transparent);">
+                  <div style="color:white;font-family:var(--font-display);font-size:1.1rem;font-weight:600;">Váy đi biển</div>
+                  <div style="color:rgba(255,255,255,.8);font-size:.8rem;margin-top:2px;">Thuê từ 80.000₫/ngày</div>
+                </div>
+              </div>
+              <div class="swiper-slide" style="position:relative;overflow:hidden;">
+                <img src="https://img.upanhnhanh.com/ad56352320d1d94e515ef4c1cbca34ab"
+                     alt="Váy đi cafe sang-xịn-mịn"
+                     style="width:100%;height:100%;object-fit:cover;display:block;">
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.25rem;
+                            background:linear-gradient(to top,rgba(45,27,30,.55),transparent);">
+                  <div style="color:white;font-family:var(--font-display);font-size:1.1rem;font-weight:600;">Váy đi cafe sang-xịn-mịn</div>
+                  <div style="color:rgba(255,255,255,.8);font-size:.8rem;margin-top:2px;">Thuê từ 120.000₫/ngày</div>
+                </div>
+              </div>
+              <div class="swiper-slide" style="position:relative;overflow:hidden;">
+                <img src="https://img.upanhnhanh.com/f995e12d55ee831db9f158b4079b60b5"
+                     alt="Váy dự tiệc"
+                     style="width:100%;height:100%;object-fit:cover;display:block;">
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.25rem;
+                            background:linear-gradient(to top,rgba(45,27,30,.55),transparent);">
+                  <div style="color:white;font-family:var(--font-display);font-size:1.1rem;font-weight:600;">Váy Dự Tiệc Sang Trọng</div>
+                  <div style="color:rgba(255,255,255,.8);font-size:.8rem;margin-top:2px;">Thuê từ 150.000₫/ngày</div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-pagination hero-swiper-pagination"></div>
+          </div>
+        </div>
+
+        <!-- Floating stat card 1 -->
+        <div class="hero-stat-card card-1">
+          <div class="stat-icon"><i class="fas fa-heart"></i></div>
+          <div>
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Khách hàng yêu thích</div>
+          </div>
+        </div>
+
+        <!-- Floating stat card 2 -->
+        <div class="hero-stat-card card-2">
+          <div class="stat-icon"><i class="fas fa-dress"></i></div>
+          <div>
+            <div class="stat-number">100+</div>
+            <div class="stat-label">Bộ trang phục</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CATEGORIES SECTION
+     Categories are auto-loaded from products.js CATEGORIES array
+============================================================ -->
+<section class="section" id="categories">
+  <div class="container-custom">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-eyebrow">Danh mục</span>
+      <h2 class="section-title">Tìm theo <em>Phong cách</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Categories grid — auto-populated by main.js → initCategories() -->
+    <div class="category-grid" id="categoriesGrid" data-aos="fade-up" data-aos-delay="100">
+      <!-- Categories will be injected here by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURED PRODUCTS (SLIDER)
+     Shows products where isFeatured: true in products.js
+============================================================ -->
+<section class="section section-pink" id="featured">
+  <div class="container-custom">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-eyebrow">Đặc sắc</span>
+      <h2 class="section-title">Trang phục <em>Nổi bật</em></h2>
+      <div class="divider-line"></div>
+      <p class="section-subtitle">Những bộ trang phục được khách hàng yêu thích nhất</p>
+    </div>
+
+    <!-- Slider wrapper -->
+    <div style="position:relative;" data-aos="fade-up" data-aos-delay="100">
+      <div class="swiper featured-swiper">
+        <div class="swiper-wrapper" id="featuredWrapper">
+          <!-- Products will be injected here by main.js → initFeaturedProducts() -->
+        </div>
+        <div class="swiper-pagination featured-pagination" style="margin-top:1.5rem;"></div>
+      </div>
+      <!-- Navigation arrows -->
+      <button class="swiper-button-prev featured-prev" style="left:-20px;"></button>
+      <button class="swiper-button-next featured-next" style="right:-20px;"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ALL PRODUCTS GRID
+     Search bar + Category filter + Product cards
+============================================================ -->
+<section class="section" id="products">
+  <div class="container-custom">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-eyebrow">Bộ sưu tập</span>
+      <h2 class="section-title">Tất cả <em>Sản phẩm</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Search bar -->
+    <div data-aos="fade-up" style="margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto;">
+      <div style="position:relative;">
+        <i class="fas fa-search" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gray-mid);font-size:.9rem;"></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Tìm kiếm trang phục..."
+          class="form-control"
+          style="padding-left:44px;"
+        >
+      </div>
+    </div>
+
+    <!-- Products grid — auto-populated by main.js → renderProducts() -->
+    <div class="products-grid" id="productsGrid">
+      <!-- Product cards will be injected here by JavaScript -->
+    </div>
+
+    <!-- Load more button (optional — can show/hide with JS) -->
+    <div style="text-align:center;margin-top:3rem;" data-aos="fade-up">
+      <a href="#products" class="btn-outline" onclick="renderProducts(PRODUCTS); return false;">
+        <i class="fas fa-rotate-right"></i>
+        Xem tất cả
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     RENTAL GUIDE
+     Step-by-step guide on how to rent clothes
+============================================================ -->
+<section class="section section-alt" id="rental-guide">
+  <div class="container-custom">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-eyebrow">Hướng dẫn</span>
+      <h2 class="section-title">Cách <em>Thuê đồ</em></h2>
+      <div class="divider-line"></div>
+      <p class="section-subtitle">Chỉ 4 bước đơn giản để có bộ trang phục ưng ý</p>
+    </div>
+
+    <div class="rental-steps" data-aos="fade-up" data-aos-delay="100">
+      <!--
+        STEP CARDS
+        To add a step: copy one <div class="rental-step"> block and edit it
+        To change icon: use FontAwesome icon names from fontawesome.com
+      -->
+      <div class="rental-step">
+        <div class="step-number">1</div>
+        <div class="step-icon"><i class="fas fa-magnifying-glass-dollar"></i></div>
+        <h3 class="step-title">Chọn trang phục</h3>
+        <p class="step-desc">Duyệt qua bộ sưu tập và chọn bộ đồ bạn yêu thích. Xem ảnh chi tiết và đọc mô tả sản phẩm.</p>
+      </div>
+
+      <div class="rental-step">
+        <div class="step-number">2</div>
+        <div class="step-icon"><i class="fas fa-calendar-days"></i></div>
+        <h3 class="step-title">Chọn ngày thuê</h3>
+        <p class="step-desc">Chọn ngày bắt đầu và ngày trả. Giá thuê tự động tính theo số ngày bạn chọn.</p>
+      </div>
+
+      <div class="rental-step">
+        <div class="step-number">3</div>
+        <div class="step-icon"><i class="fas fa-credit-card"></i></div>
+        <h3 class="step-title">Thanh toán</h3>
+        <p class="step-desc">Thanh toán qua chuyển khoản ngân hàng hoặc tiền mặt khi nhận hàng (COD) tiện lợi.</p>
+      </div>
+
+      <div class="rental-step">
+        <div class="step-number">4</div>
+        <div class="step-icon"><i class="fas fa-truck-fast"></i></div>
+        <h3 class="step-title">Nhận & Trả đồ</h3>
+        <p class="step-desc">Nhận trang phục tại nhà hoặc đến lấy tại shop. Trả lại khi hết thời gian thuê.</p>
+      </div>
+    </div>
+
+    <!-- Price info box -->
+    <div data-aos="fade-up" data-aos-delay="200"
+         style="background:white;border-radius:var(--radius-lg);padding:2rem;margin-top:3rem;border:1px solid rgba(255,182,193,.2);text-align:center;max-width:600px;margin-left:auto;margin-right:auto;">
+      <h3 style="font-family:var(--font-display);margin-bottom:1rem;">Bảng giá thuê</h3>
+      <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:2rem;font-family:var(--font-display);color:var(--pink-dark);font-weight:600;">-10%</div>
+          <div style="font-size:.85rem;color:var(--gray-mid);">Khi có feedback</div>
+        </div>
+        <div>
+          <div style="font-size:2rem;font-family:var(--font-display);color:var(--pink-dark);font-weight:600;">-15%</div>
+          <div style="font-size:.85rem;color:var(--gray-mid);">Khi thuê từ 2 bộ</div>
+        </div>
+        <div>
+          <div style="font-size:2rem;font-family:var(--font-display);color:var(--pink-dark);font-weight:600;">-10%</div>
+          <div style="font-size:.85rem;color:var(--gray-mid);">Khi rủ thêm 1 người</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CUSTOMER REVIEWS
+============================================================ -->
+<section class="section section-pink" id="reviews">
+  <div class="container-custom">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-eyebrow">Đánh giá</span>
+      <h2 class="section-title">Khách hàng <em>Yêu thích</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="swiper reviews-swiper" data-aos="fade-up" data-aos-delay="100">
+      <div class="swiper-wrapper">
+        <!--
+          REVIEW CARDS
+          To add a review: copy one <div class="swiper-slide"> block below
+          Edit: reviewer name, date, stars, and the review text
+        -->
+        <div class="swiper-slide">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer-avatar">A</div>
+              <div>
+                <div class="reviewer-name">Nguyễn Thị Anh</div>
+                <div class="stars">★★★★★</div>
+                <div class="reviewer-date">12/03/2025</div>
+              </div>
+            </div>
+            <p class="review-text">"Thuê đầm dự tiệc tại shop, chất lượng tuyệt vời! Vải mịn, đẹp đúng như ảnh. Shop giao hàng nhanh và đóng gói cẩn thận. Sẽ quay lại thuê tiếp!"</p>
+            <div class="review-product">🛍 Đầm Sequin Hồng</div>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer-avatar" style="background:linear-gradient(135deg,#c9a96e,#e8c97a);">L</div>
+              <div>
+                <div class="reviewer-name">Trần Thị Lan</div>
+                <div class="stars">★★★★★</div>
+                <div class="reviewer-date">08/03/2025</div>
+              </div>
+            </div>
+            <p class="review-text">"Áo dài cách tân đẹp lắm, mặc tốt nghiệp vừa vặn, sang trọng. Giá thuê rất hợp lý, tiết kiệm hơn mua mới nhiều. Cảm ơn shop Gia Linh!"</p>
+            <div class="review-product">🛍 Áo Dài Cách Tân Hồng Sen</div>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer-avatar" style="background:linear-gradient(135deg,#f48fb1,#e91e63);">M</div>
+              <div>
+                <div class="reviewer-name">Lê Minh Thư</div>
+                <div class="stars">★★★★★</div>
+                <div class="reviewer-date">20/02/2025</div>
+              </div>
+            </div>
+            <p class="review-text">"Mua set đồ tweed, chất lượng vượt kỳ vọng! Shop tư vấn nhiệt tình, giao hàng đúng hẹn. Sẽ giới thiệu cho bạn bè cùng mua nhé!"</p>
+            <div class="review-product">🛍 Quần Ống Rộng + Áo Croptop Tweed</div>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer-avatar" style="background:linear-gradient(135deg,#80cbc4,#26a69a);">H</div>
+              <div>
+                <div class="reviewer-name">Phạm Thị Hoa</div>
+                <div class="stars">★★★★☆</div>
+                <div class="reviewer-date">15/02/2025</div>
+              </div>
+            </div>
+            <p class="review-text">"Đầm xòe baby pink siêu xinh! Mặc sinh nhật ai cũng khen. Shop wrap hàng cẩn thận, quần áo thơm và sạch. Giá thuê phải chăng!"</p>
+            <div class="review-product">🛍 Đầm Xòe Tiệc Baby Pink</div>
+          </div>
+        </div>
+
+        <div class="swiper-slide">
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer-avatar" style="background:linear-gradient(135deg,#b39ddb,#7e57c2);">N</div>
+              <div>
+                <div class="reviewer-name">Võ Thị Ngọc</div>
+                <div class="stars">★★★★★</div>
+                <div class="reviewer-date">01/02/2025</div>
+              </div>
+            </div>
+            <p class="review-text">"Mua đầm ren vai trần, đúng màu đúng size. Chất ren đẹp, không xơ. Shop còn tặng kèm túi bảo quản rất chu đáo. Rất hài lòng!"</p>
+            <div class="review-product">🛍 Đầm Ren Vai Trần Trắng Sữa</div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination reviews-pagination" style="margin-top:2rem;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT SECTION
+     Update phone, facebook, email in SHOP_INFO in products.js
+============================================================ -->
+<section class="section" id="contact">
+  <div class="container-custom">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-eyebrow">Liên hệ</span>
+      <h2 class="section-title">Kết nối với <em>Chúng tôi</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Left: Contact info -->
+      <div data-aos="fade-right">
+        <h3 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:0.5rem;">Hnilie Closet 💓</h3>
+        <p style="color:var(--gray-text);margin-bottom:2rem;font-weight:300;">
+          Chúng tôi luôn sẵn sàng tư vấn và hỗ trợ bạn chọn bộ trang phục ưng ý nhất.
+          Liên hệ ngay để được phục vụ tận tình!
+        </p>
+
+        <!-- Phone -->
+        <a href="tel:0962471234" class="contact-info-item">
+          <div class="contact-icon icon-phone">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div>
+            <div class="contact-label">Điện thoại</div>
+            <!-- Change phone number here and in products.js → SHOP_INFO.phone -->
+            <div class="contact-value">096 458 3100</div>
+          </div>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/linhtg06" target="_blank" class="contact-info-item">
+          <div class="contact-icon icon-fb">
+            <i class="fab fa-facebook-f"></i>
+          </div>
+          <div>
+            <div class="contact-label">Facebook</div>
+            <div class="contact-value">facebook.com/linhtg06</div>
+          </div>
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:ngval1234@gmail.com" class="contact-info-item">
+          <div class="contact-icon icon-email">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div>
+            <div class="contact-label">Email</div>
+            <!-- Change email here and in products.js → SHOP_INFO.email -->
+            <div class="contact-value">ngvalhieu@gmail.com</div>
+          </div>
+        </a>
+
+        <!-- Map/Address hint -->
+        <div class="contact-info-item">
+          <div class="contact-icon" style="background:var(--pink-pale);color:var(--pink-dark);">
+            <i class="fas fa-location-dot"></i>
+          </div>
+          <div>
+            <div class="contact-label">Địa chỉ</div>
+            <div class="contact-value">TP. Hà Nội, Việt Nam</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Contact form -->
+      <div data-aos="fade-left">
+        <div style="background:white;border-radius:var(--radius-lg);padding:2.5rem;box-shadow:var(--shadow-card);">
+          <h3 style="font-family:var(--font-display);margin-bottom:1.5rem;">Gửi tin nhắn</h3>
+
+          <!--
+            CONTACT FORM
+            This form submits via JavaScript (no backend needed for basic use)
+            For real email sending: connect to EmailJS or a backend API
+          -->
+          <form id="contactForm">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Họ và tên *" required>
+            </div>
+            <div class="form-group">
+              <input type="tel" class="form-control" placeholder="Số điện thoại *" required>
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Email (tùy chọn)">
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" rows="4" placeholder="Nội dung tin nhắn *" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">
+              <i class="fas fa-paper-plane"></i>
+              Gửi tin nhắn
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer">
+  <div class="container-custom">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2rem;flex-wrap:wrap;">
+
+      <!-- About shop -->
+      <div>
+        <div class="footer-logo">Hnilie Closet 💓</div>
+        <p class="footer-desc">
+          Shop thời trang nữ chuyên thuê và bán đầm, váy, áo dài cao cấp.
+          Phong cách thanh lịch — giá cả phải chăng.
+        </p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/linhtg06" target="_blank" class="social-link">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="tel:0962471234" class="social-link">
+            <i class="fas fa-phone"></i>
+          </a>
+          <a href="mailto:ngval1234@gmail.com" class="social-link">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <h4 class="footer-heading">Danh mục</h4>
+        <ul class="footer-links">
+          <li><a href="#products">Tất cả sản phẩm</a></li>
+          <li><a href="#products" onclick="filterByCategory('dam')">Đầm</a></li>
+          <li><a href="#products" onclick="filterByCategory('vay')">Váy</a></li>
+          <li><a href="#products" onclick="filterByCategory('ao-dai')">Áo Dài</a></li>
+          <li><a href="#products" onclick="filterByCategory('set')">Set Đồ</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <h4 class="footer-heading">Dịch vụ</h4>
+        <ul class="footer-links">
+          <li><a href="#rental-guide">Thuê đồ</a></li>
+          <li><a href="/pages/checkout.html">Đặt hàng</a></li>
+          <li><a href="#contact">Liên hệ</a></li>
+        </ul>
+      </div>
+
+      <!-- Payment info -->
+      <div>
+        <h4 class="footer-heading">Thanh toán</h4>
+        <ul class="footer-links">
+          <li><a href="#">Chuyển khoản MBBANK</a></li>
+          <li><a href="#">COD - Thu tiền khi giao</a></li>
+          <li><a href="#">Đổi trả trong 24h</a></li>
+        </ul>
+        <div style="margin-top:1rem;padding:1rem;background:rgba(255,182,193,.1);border-radius:8px;border:1px solid rgba(255,182,193,.2);">
+          <div style="font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:4px;">Tài khoản ngân hàng</div>
+          <div style="font-size:.9rem;color:var(--pink-light);font-weight:600;">ViettinBank: 100882213542</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Shop Hnilie Closet. Tất cả quyền được bảo lưu.</span>
+      <span style="color:rgba(255,255,255,.4);">Made with 💓 by Văn Híu</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     CART SIDEBAR
+============================================================ -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2 class="cart-title">Giỏ hàng 🛍</h2>
+    <button class="cart-close" onclick="closeCart()">
+      <i class="fas fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- Cart items list (populated by JavaScript) -->
+  <div class="cart-items" id="cartItemsList"></div>
+
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Tổng cộng</span>
+      <span id="cartTotal">0₫</span>
+    </div>
+    <a href="/pages/checkout.html" class="btn-primary" style="width:100%;justify-content:center;display:flex;">
+      <i class="fas fa-credit-card"></i>
+      Thanh toán ngay
+    </a>
+    <button onclick="closeCart()" class="btn-ghost" style="width:100%;justify-content:center;margin-top:0.5rem;">
+      Tiếp tục mua sắm
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     PRODUCT DETAIL MODAL
+     Opens when user clicks "Thuê" or "Xem chi tiết"
+============================================================ -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeProductModal()">
+      <i class="fas fa-xmark"></i>
+    </button>
+
+    <div class="modal-body">
+      <!-- Image gallery slider -->
+      <div class="modal-gallery">
+        <div class="swiper modal-swiper" style="height:100%;">
+          <div class="swiper-wrapper modal-swiper-wrapper">
+            <!-- Images injected by JavaScript -->
+          </div>
+          <div class="swiper-pagination modal-swiper-pagination"></div>
+          <div class="swiper-button-prev modal-swiper-prev"></div>
+          <div class="swiper-button-next modal-swiper-next"></div>
+        </div>
+      </div>
+
+      <!-- Product info -->
+      <div class="modal-info">
+        <div class="modal-category" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--pink-mid);margin-bottom:.5rem;"></div>
+        <h2 class="modal-product-name">Tên sản phẩm</h2>
+
+        <!-- Rating -->
+        <div style="display:flex;align-items:center;gap:8px;margin:.75rem 0;">
+          <span class="stars">★★★★★</span>
+          <span style="font-size:.85rem;color:var(--gray-text);">4.9 (24 đánh giá)</span>
+        </div>
+
+        <!-- Prices -->
+        <div class="modal-prices">
+          <div class="modal-price-item">
+            <div class="modal-price-label">Giá thuê</div>
+            <div class="modal-price-val rent">0₫/ngày</div>
+          </div>
+          <div class="modal-price-item">
+            <div class="modal-price-label">Giá mua</div>
+            <div class="modal-price-val buy">0₫</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p class="modal-desc">Mô tả sản phẩm</p>
+
+        <!-- Size selector -->
+        <div>
+          <div style="font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-text);margin-bottom:.5rem;">Size</div>
+          <div class="size-row">
+            <!-- Sizes injected by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Rental date picker -->
+        <div class="date-picker-group">
+          <div class="date-picker-title">
+            <i class="fas fa-calendar-days"></i>
+            Chọn ngày thuê
+          </div>
+          <div class="date-row">
+            <div class="date-field">
+              <div class="date-label">Ngày bắt đầu</div>
+              <input type="text" id="rentalStart" class="form-control" placeholder="Chọn ngày..." readonly>
+            </div>
+            <div class="date-field">
+              <div class="date-label">Ngày trả</div>
+              <input type="text" id="rentalEnd" class="form-control" placeholder="Chọn ngày..." readonly>
+            </div>
+          </div>
+          <div class="rental-total" id="rentalTotal">Chọn ngày để xem giá thuê</div>
+        </div>
+
+        <!-- Action buttons -->
+        <div style="display:flex;gap:1rem;margin-top:auto;">
+          <button onclick="addRentalToCart()" class="btn-outline" style="flex:1;justify-content:center;">
+            <i class="fas fa-calendar-days"></i>
+            Thêm vào giỏ (Thuê)
+          </button>
+          <button onclick="addBuyToCart()" class="btn-primary" style="flex:1;justify-content:center;">
+            <i class="fas fa-bag-shopping"></i>
+            Mua ngay
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCROLL TO TOP BUTTON
+============================================================ -->
+<button class="scroll-top" aria-label="Về đầu trang">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- ============================================================
+     SCRIPTS — load order matters!
+============================================================ -->
+<!-- Swiper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+<!-- AOS animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<!-- Flatpickr date picker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<!-- Flatpickr Vietnamese locale -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/vn.min.js"></script>
+<!-- Axios for HTTP requests -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.6/sweetalert2.all.min.js"></script>
+
+<!-- Shop data (load before main.js!) -->
+<script src="/assets/js/products.js"></script>
+<!-- Main functionality -->
+<script src="/assets/js/main.js"></script>
+
+</body>
+</html>

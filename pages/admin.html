@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!--
+  ============================================================
+  SHOP GIA LINH - ADMIN PANEL
+  ============================================================
+  This page shows all orders received from customers.
+  Access at: localhost:3000/pages/admin.html
+  ============================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Hnilie Closet</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <style>
+    body { background: var(--gray-soft); }
+
+    .admin-topbar {
+      background: white;
+      padding: .75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gray-soft);
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    .admin-topbar-title { font-family: var(--font-display); font-size: 1.2rem; color: var(--dark); }
+
+    .realtime-badge {
+      display: flex; align-items: center; gap: 8px;
+      font-size: .8rem; color: #16a34a;
+      background: #f0fdf4;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .dot-pulse {
+      width: 8px; height: 8px;
+      background: #16a34a;
+      border-radius: 50%;
+      animation: pulse-dot 1.5s ease infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.7); }
+    }
+
+    .action-btns { display: flex; gap: 8px; }
+    .action-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: .78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-confirm { background: #e8f5e9; color: #388e3c; }
+    .btn-confirm:hover { background: #c8e6c9; }
+    .btn-cancel  { background: #fce4ec; color: #c62828; }
+    .btn-cancel:hover  { background: #f8bbd0; }
+
+    /* Order details panel */
+    .order-detail-panel {
+      position: fixed; top: 0; right: 0;
+      width: 420px; height: 100vh;
+      background: white;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+      z-index: 200;
+      overflow-y: auto;
+      box-shadow: -8px 0 40px rgba(0,0,0,.12);
+    }
+    .order-detail-panel.open { transform: translateX(0); }
+
+    .panel-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.3);
+      z-index: 199;
+      opacity: 0; visibility: hidden;
+      transition: var(--transition);
+    }
+    .panel-overlay.open { opacity: 1; visibility: visible; }
+  </style>
+</head>
+
+<body>
+
+<!-- ── ADMIN LAYOUT ── -->
+<div class="admin-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo" style="display:flex;align-items:center;gap:10px;margin-bottom:0;">
+  <img src="/assets/images/logo.png" alt="logo"
+       style="height:40px;width:40px;object-fit:contain;border-radius:50%;flex-shrink:0;">
+  <span>Hnilie Closet</span>
+</div>
+    <div class="admin-logo-sub">Quản trị viên</div>
+
+    <ul class="admin-nav">
+      <li>
+        <a href="#dashboard" class="active" onclick="showSection('dashboard')">
+          <i class="fas fa-chart-pie"></i> Tổng quan
+        </a>
+      </li>
+      <li>
+        <a href="#orders" onclick="showSection('orders')">
+          <i class="fas fa-clipboard-list"></i> Đơn hàng
+          <span id="newOrderBadge" style="margin-left:auto;background:var(--pink-dark);color:white;font-size:.65rem;padding:2px 7px;border-radius:100px;display:none;"></span>
+        </a>
+      </li>
+      <li>
+        <a href="#products-admin" onclick="showSection('products-admin')">
+          <i class="fas fa-shirt"></i> Sản phẩm
+        </a>
+      </li>
+      <li>
+        <a href="/pages/index.html" target="_blank">
+          <i class="fas fa-arrow-up-right-from-square"></i> Xem website
+        </a>
+      </li>
+    </ul>
+
+    <div style="margin-top:auto;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);">
+      <div style="font-size:.75rem;color:rgba(255,255,255,.3);">
+        <div>Phiên bản 1.0.0</div>
+        <div style="margin-top:4px;">Shop Gia Linh © 2025</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="admin-main">
+
+    <!-- Top bar -->
+    <div class="admin-topbar">
+      <div class="admin-topbar-title" id="currentSectionTitle">📊 Tổng quan</div>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <div class="realtime-badge">
+          <div class="dot-pulse"></div>
+          Đang kết nối
+        </div>
+        <button onclick="loadOrders()" class="btn-outline btn-sm">
+          <i class="fas fa-rotate-right"></i> Làm mới
+        </button>
+      </div>
+    </div>
+
+    <!-- ─────────── DASHBOARD SECTION ─────────── -->
+    <div id="section-dashboard">
+
+      <!-- Stat cards -->
+      <div class="admin-stats" style="margin-top:1.5rem;">
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Tổng đơn hàng</div>
+          <div class="admin-stat-value" id="statTotalOrders">0</div>
+          <div class="admin-stat-change"><i class="fas fa-arrow-up"></i> Hôm nay</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Chờ xác nhận</div>
+          <div class="admin-stat-value" id="statPending" style="color:var(--pink-dark);">0</div>
+          <div class="admin-stat-change" style="color:#f57c00;"><i class="fas fa-clock"></i> Cần xử lý</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Doanh thu tháng</div>
+          <div class="admin-stat-value" id="statRevenue" style="font-size:1.3rem;">0₫</div>
+          <div class="admin-stat-change"><i class="fas fa-arrow-up"></i> Tháng này</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Đơn hoàn thành</div>
+          <div class="admin-stat-value" id="statCompleted" style="color:#388e3c;">0</div>
+          <div class="admin-stat-change" style="color:#388e3c;"><i class="fas fa-check"></i> Đã giao</div>
+        </div>
+      </div>
+
+      <!-- Recent orders table (embedded in dashboard) -->
+      <div style="margin-top:2rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+          <h3 style="font-family:var(--font-display);font-size:1.3rem;">Đơn hàng gần đây</h3>
+          <button onclick="showSection('orders')" class="btn-ghost" style="font-size:.85rem;">
+            Xem tất cả <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+        <div id="dashboardOrdersTable"></div>
+      </div>
+    </div>
+
+    <!-- ─────────── ORDERS SECTION ─────────── -->
+    <div id="section-orders" style="display:none;">
+      <div style="margin-top:1.5rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.5rem;">Quản lý đơn hàng</h2>
+
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <!-- Filter tabs -->
+          <button class="action-btn" style="background:var(--pink-pale);color:var(--pink-dark);" onclick="filterOrders('all')">Tất cả</button>
+          <button class="action-btn btn-confirm" onclick="filterOrders('pending')">Chờ xử lý</button>
+          <button class="action-btn" style="background:#e3f2fd;color:#1565c0;" onclick="filterOrders('confirmed')">Đã xác nhận</button>
+          <button class="action-btn btn-cancel" onclick="filterOrders('cancelled')">Đã hủy</button>
+          <!-- Danger zone -->
+          <div style="width:1px;background:var(--gray-soft);margin:0 4px;"></div>
+          <button class="action-btn" style="background:#fce4ec;color:#b71c1c;font-weight:600;"
+                  onclick="deleteAllCancelled()" title="Xóa tất cả đơn đã hủy">
+            <i class="fas fa-broom"></i> Xóa đơn đã hủy
+          </button>
+          <button class="action-btn" style="background:#ffebee;color:#b71c1c;border:1px dashed #ef9a9a;"
+                  onclick="deleteAllOrders()" title="Xóa TOÀN BỘ đơn hàng (chỉ dùng để xóa test)">
+            <i class="fas fa-trash-can"></i> Xóa tất cả
+          </button>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div style="margin-bottom:1.25rem;max-width:400px;">
+        <div style="position:relative;">
+          <i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-mid);"></i>
+          <input type="text" id="orderSearch" class="form-control"
+                 placeholder="Tìm theo mã đơn, tên, SĐT..."
+                 style="padding-left:36px;" oninput="searchOrders(this.value)">
+        </div>
+      </div>
+
+      <!-- Full orders table -->
+      <div id="fullOrdersTable"></div>
+    </div>
+
+    <!-- ─────────── PRODUCTS SECTION ─────────── -->
+    <div id="section-products-admin" style="display:none;">
+      <div style="margin-top:1.5rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:1.5rem;">Danh sách sản phẩm</h2>
+
+        <div style="background:white;border-radius:var(--radius-md);padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);">
+          <p style="color:var(--gray-text);margin-bottom:1.5rem;font-size:.9rem;">
+            <i class="fas fa-circle-info" style="color:var(--pink-mid);"></i>
+            Để thêm sản phẩm mới: tạo thư mục trong <code>public/clothes/</code> và thêm vào <code>assets/js/products.js</code>
+          </p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;" id="adminProductsList">
+            <!-- Products rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ─────────── DISCOUNTS SECTION ─────────── -->
+    <div id="section-discounts" style="display:none;">
+      <div style="margin-top:1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.5rem;">Mã giảm giá</h2>
+        <a href="/assets/discounts.txt" target="_blank" class="btn-outline btn-sm">
+          <i class="fas fa-file-lines"></i> Mở file discounts.txt
+        </a>
+      </div>
+
+      <!-- How to add guide -->
+      <div style="background:white;border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);">
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:1rem;">
+          <i class="fas fa-circle-info" style="color:var(--pink-mid);"></i> Cách thêm mã giảm giá
+        </h3>
+        <p style="font-size:.88rem;color:var(--gray-text);margin-bottom:1rem;">
+          Mở file <code style="background:var(--pink-pale);padding:2px 6px;border-radius:4px;">assets/discounts.txt</code> bằng Notepad và thêm dòng theo định dạng:
+        </p>
+        <div style="background:var(--dark);color:#f8f9fa;border-radius:8px;padding:1rem;font-family:monospace;font-size:.85rem;line-height:1.8;">
+          <span style="color:#a5d6a7;"># Dòng bắt đầu bằng # là ghi chú, bị bỏ qua</span><br>
+          <span style="color:#ffcc80;">TÊN_MÃ</span> | <span style="color:#80deea;">%</span> | <span style="color:#ef9a9a;">20</span> | Mô tả giảm 20%<br>
+          <span style="color:#ffcc80;">TÊN_MÃ</span> | <span style="color:#80deea;">vnd</span> | <span style="color:#ef9a9a;">50000</span> | Mô tả giảm 50.000đ
+        </div>
+        <div style="display:flex;gap:1.5rem;margin-top:1rem;font-size:.82rem;color:var(--gray-text);flex-wrap:wrap;">
+          <div><strong>%</strong> = Giảm theo phần trăm (10%-60%)</div>
+          <div><strong>vnd</strong> = Giảm số tiền cố định (5k, 10k, 100k...)</div>
+          <div><i class="fas fa-save" style="color:var(--pink-mid);"></i> Lưu file → refresh trang là xong</div>
+        </div>
+      </div>
+
+      <!-- Live discount codes table -->
+      <div style="background:white;border-radius:var(--radius-md);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);">
+        <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--gray-soft);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:600;font-size:.9rem;">Danh sách mã hiện tại</span>
+          <button onclick="loadDiscountTable()" class="btn-ghost btn-sm">
+            <i class="fas fa-rotate-right"></i> Làm mới
+          </button>
+        </div>
+
+        <!-- Search filter -->
+        <div style="padding:.75rem 1.5rem;border-bottom:1px solid var(--gray-soft);">
+          <input type="text" id="discountSearch" class="form-control"
+                 placeholder="Tìm mã giảm giá..."
+                 style="max-width:300px;"
+                 oninput="filterDiscountTable(this.value)">
+        </div>
+
+        <div id="discountTableWrap" style="overflow-x:auto;">
+          <table class="orders-table" id="discountTable">
+            <thead>
+              <tr>
+                <th>Mã code</th>
+                <th>Loại</th>
+                <th>Giá trị</th>
+                <th>Mô tả</th>
+                <th>Test thử</th>
+              </tr>
+            </thead>
+            <tbody id="discountTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-mid);">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="discountCount" style="padding:.75rem 1.5rem;font-size:.8rem;color:var(--gray-mid);border-top:1px solid var(--gray-soft);"></div>
+      </div>
+    </div>
+
+  </main><!-- end admin-main -->
+</div><!-- end admin-layout -->
+
+<!-- ─────────── ORDER DETAIL PANEL ─────────── -->
+<div class="panel-overlay" id="panelOverlay" onclick="closeOrderPanel()"></div>
+<div class="order-detail-panel" id="orderDetailPanel">
+  <div style="padding:1.5rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+      <h3 style="font-family:var(--font-display);font-size:1.3rem;">Chi tiết đơn hàng</h3>
+      <button onclick="closeOrderPanel()" style="background:var(--gray-soft);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.85rem;color:var(--gray-text);">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+    <div id="orderDetailContent">
+      <!-- Populated by openOrderDetail() -->
+    </div>
+  </div>
+</div>
+
+<!-- Notification container -->
+<div class="notification-container" id="notifContainer"></div>
+
+<!-- ── SCRIPTS ── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="/assets/js/products.js"></script>
+<script src="/assets/js/discounts.js"></script>
+<script src="/assets/js/main.js"></script>
+
+<script>
+/**
+ * ── ADMIN PANEL JAVASCRIPT ──
+ */
+
+
+/**
+ * DELETE SINGLE ORDER
+ * Shows a confirmation dialog before deleting
+ */
+async function deleteOrder(orderId) {
+  const confirmed = window.confirm(`Bạn có chắc muốn xóa đơn hàng ${orderId} không?\n\nHành động này không thể hoàn tác.`);
+  if (!confirmed) return;
+
+  try {
+    await axios.delete(`/api/orders/${orderId}`);
+  } catch (err) {
+    // Fallback: delete from localStorage
+  }
+
+  // Also remove from localStorage
+  let stored = JSON.parse(localStorage.getItem('glOrders') || '[]');
+  stored = stored.filter(o => o.orderId !== orderId);
+  localStorage.setItem('glOrders', JSON.stringify(stored));
+
+  showToast('Đã xóa!', `Đơn hàng ${orderId} đã được xóa.`, 'fa-trash');
+  await loadOrders();
+}
+
+/**
+ * DELETE ALL CANCELLED ORDERS
+ * Removes only orders with status = "cancelled"
+ */
+async function deleteAllCancelled() {
+  const cancelled = allOrders.filter(o => o.status === 'cancelled');
+  if (cancelled.length === 0) {
+    showToast('Không có đơn nào!', 'Không có đơn hàng đã hủy để xóa.', 'fa-circle-info', 'warning');
+    return;
+  }
+
+  const confirmed = window.confirm(`Xóa ${cancelled.length} đơn hàng đã hủy?\n\nHành động này không thể hoàn tác.`);
+  if (!confirmed) return;
+
+  for (const order of cancelled) {
+    try { await axios.delete(`/api/orders/${order.orderId}`); } catch(e) {}
+  }
+
+  // Update localStorage
+  let stored = JSON.parse(localStorage.getItem('glOrders') || '[]');
+  stored = stored.filter(o => o.status !== 'cancelled');
+  localStorage.setItem('glOrders', JSON.stringify(stored));
+
+  showToast('Đã xóa!', `Đã xóa ${cancelled.length} đơn hàng đã hủy.`, 'fa-broom');
+  await loadOrders();
+}
+
+/**
+ * DELETE ALL ORDERS
+ * ⚠️ Use only to clear test data — asks for confirmation twice
+ */
+async function deleteAllOrders() {
+  if (allOrders.length === 0) {
+    showToast('Trống!', 'Không có đơn hàng nào để xóa.', 'fa-circle-info', 'warning');
+    return;
+  }
+
+  const step1 = window.confirm(`⚠️ CẢNH BÁO: Xóa TẤT CẢ ${allOrders.length} đơn hàng?\n\nChỉ dùng chức năng này để xóa dữ liệu test!\n\nNhấn OK để tiếp tục xác nhận.`);
+  if (!step1) return;
+
+  const step2 = window.confirm(`Xác nhận lần cuối: Xóa vĩnh viễn ${allOrders.length} đơn hàng?\n\nKhông thể hoàn tác!`);
+  if (!step2) return;
+
+  for (const order of allOrders) {
+    try { await axios.delete(`/api/orders/${order.orderId}`); } catch(e) {}
+  }
+
+  // Clear localStorage
+  localStorage.setItem('glOrders', '[]');
+
+  showToast('Đã xóa tất cả!', 'Toàn bộ đơn hàng đã được xóa.', 'fa-trash-can');
+  await loadOrders();
+}
+
+// Store all orders
+let allOrders = [];
+let filteredOrders = [];
+
+/**
+ * LOAD ORDERS FROM SERVER OR LOCAL STORAGE
+ */
+async function loadOrders() {
+  try {
+    // Try fetching from the Node.js API
+    const res = await axios.get('/api/orders');
+    allOrders = res.data.orders || [];
+  } catch (err) {
+    // Fallback: load from localStorage (when server is not running)
+    allOrders = JSON.parse(localStorage.getItem('glOrders') || '[]');
+  }
+
+  filteredOrders = [...allOrders];
+  updateStats();
+  renderOrdersTable(filteredOrders, 'dashboardOrdersTable', 5);
+  renderOrdersTable(filteredOrders, 'fullOrdersTable');
+  updateNewOrderBadge();
+}
+
+/**
+ * UPDATE STATISTICS CARDS
+ */
+function updateStats() {
+  document.getElementById('statTotalOrders').textContent = allOrders.length;
+
+  const pending   = allOrders.filter(o => o.status === 'pending').length;
+  const completed = allOrders.filter(o => o.status === 'completed').length;
+  const revenue   = allOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+  document.getElementById('statPending').textContent   = pending;
+  document.getElementById('statCompleted').textContent = completed;
+  document.getElementById('statRevenue').textContent   = formatVND(revenue);
+
+  // Show badge on sidebar if pending orders exist
+  const badge = document.getElementById('newOrderBadge');
+  if (pending > 0) {
+    badge.textContent = pending;
+    badge.style.display = 'inline';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+/**
+ * RENDER ORDERS TABLE
+ * @param orders   - array of orders to display
+ * @param targetId - ID of the container element
+ * @param limit    - max rows to show (optional)
+ */
+function renderOrdersTable(orders, targetId, limit = null) {
+  const container = document.getElementById(targetId);
+  if (!container) return;
+
+  const displayOrders = limit ? orders.slice(0, limit) : orders;
+
+  if (displayOrders.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:3rem;color:var(--gray-mid);">
+        <i class="fas fa-clipboard-list" style="font-size:3rem;margin-bottom:1rem;display:block;"></i>
+        <p>Chưa có đơn hàng nào</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="orders-table-wrap">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>SĐT</th>
+            <th>Sản phẩm</th>
+            <th>Tổng tiền</th>
+            <th>Thanh toán</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${displayOrders.map(order => `
+            <tr>
+              <td><strong style="color:var(--pink-dark);">${order.orderId}</strong></td>
+              <td>${order.customer?.name || '-'}</td>
+              <td>${order.customer?.phone || '-'}</td>
+              <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                ${(order.items || []).map(i => i.name).join(', ') || '-'}
+              </td>
+              <td><strong>${formatVND(order.total || 0)}</strong></td>
+              <td>${order.payment === 'bank' ? '🏦 Chuyển khoản' : '💵 COD'}</td>
+              <td><span class="order-status status-${order.status || 'pending'}">${getStatusLabel(order.status)}</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="action-btn" style="background:var(--pink-pale);color:var(--pink-dark);"
+                          onclick="openOrderDetail('${order.orderId}')" title="Xem chi tiết">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="action-btn btn-confirm"
+                          onclick="updateOrderStatus('${order.orderId}', 'confirmed')" title="Xác nhận">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="action-btn btn-cancel"
+                          onclick="updateOrderStatus('${order.orderId}', 'cancelled')" title="Hủy">
+                    <i class="fas fa-xmark"></i>
+                  </button>
+                  <button class="action-btn" style="background:#fce4ec;color:#b71c1c;"
+                          onclick="deleteOrder('${order.orderId}')" title="Xóa đơn hàng">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+/**
+ * GET STATUS LABEL (Vietnamese)
+ */
+function getStatusLabel(status) {
+  const labels = {
+    pending:   'Chờ xử lý',
+    confirmed: 'Đã xác nhận',
+    cancelled: 'Đã hủy',
+    completed: 'Hoàn thành'
+  };
+  return labels[status] || 'Chờ xử lý';
+}
+
+/**
+ * FILTER ORDERS BY STATUS
+ */
+function filterOrders(status) {
+  filteredOrders = status === 'all'
+    ? [...allOrders]
+    : allOrders.filter(o => o.status === status);
+
+  renderOrdersTable(filteredOrders, 'fullOrdersTable');
+}
+
+/**
+ * SEARCH ORDERS
+ */
+function searchOrders(query) {
+  const q = query.toLowerCase();
+  filteredOrders = allOrders.filter(o =>
+    (o.orderId || '').toLowerCase().includes(q) ||
+    (o.customer?.name || '').toLowerCase().includes(q) ||
+    (o.customer?.phone || '').toLowerCase().includes(q)
+  );
+  renderOrdersTable(filteredOrders, 'fullOrdersTable');
+}
+
+/**
+ * UPDATE ORDER STATUS (local only — extend with API call for real backend)
+ */
+function updateOrderStatus(orderId, newStatus) {
+  const order = allOrders.find(o => o.orderId === orderId);
+  if (!order) return;
+
+  order.status = newStatus;
+
+  // Save back to localStorage
+  localStorage.setItem('glOrders', JSON.stringify(allOrders));
+
+  // Also attempt API update
+  axios.patch(`/api/orders/${orderId}`, { status: newStatus })
+    .catch(() => {}); // Silent fail if server is offline
+
+  const label = getStatusLabel(newStatus);
+  showToast('Cập nhật!', `Đơn ${orderId} → ${label}`, 'fa-check-circle');
+
+  loadOrders(); // Refresh table
+}
+
+/**
+ * OPEN ORDER DETAIL PANEL
+ */
+function openOrderDetail(orderId) {
+  const order = allOrders.find(o => o.orderId === orderId);
+  if (!order) return;
+
+  const content = document.getElementById('orderDetailContent');
+  content.innerHTML = `
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:.78rem;color:var(--gray-mid);">Mã đơn hàng</div>
+      <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--pink-dark);">${order.orderId}</div>
+      <span class="order-status status-${order.status}">${getStatusLabel(order.status)}</span>
+    </div>
+
+    <div style="border-top:1px solid var(--gray-soft);padding-top:1rem;margin-bottom:1rem;">
+      <h4 style="font-family:var(--font-display);margin-bottom:.75rem;">Thông tin khách hàng</h4>
+      <div style="display:flex;flex-direction:column;gap:.4rem;font-size:.88rem;">
+        <div><i class="fas fa-user" style="color:var(--pink-mid);width:16px;"></i> ${order.customer?.name || '-'}</div>
+        <div><i class="fas fa-phone" style="color:var(--pink-mid);width:16px;"></i> ${order.customer?.phone || '-'}</div>
+        <div><i class="fas fa-envelope" style="color:var(--pink-mid);width:16px;"></i> ${order.customer?.email || '-'}</div>
+        <div><i class="fas fa-location-dot" style="color:var(--pink-mid);width:16px;"></i> ${order.customer?.address || '-'}, ${order.customer?.city || ''}</div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--gray-soft);padding-top:1rem;margin-bottom:1rem;">
+      <h4 style="font-family:var(--font-display);margin-bottom:.75rem;">Sản phẩm đặt</h4>
+      ${(order.items || []).map(item => `
+        <div style="background:var(--pink-pale);border-radius:8px;padding:.75rem;margin-bottom:.5rem;font-size:.85rem;">
+          <div style="font-weight:600;">${item.name}</div>
+          <div style="color:var(--pink-dark);">
+            ${item.type === 'rent'
+              ? `Thuê ${item.days} ngày: ${item.startDate} → ${item.endDate}`
+              : 'Mua sở hữu'}
+          </div>
+          <div>Size: ${item.size} • ${formatVND(item.price)}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="border-top:1px solid var(--gray-soft);padding-top:1rem;margin-bottom:1.5rem;">
+      <h4 style="font-family:var(--font-display);margin-bottom:.75rem;">Thanh toán</h4>
+      <div style="font-size:.88rem;">
+        <div>Phương thức: ${order.payment === 'bank' ? '🏦 Chuyển khoản MBBANK' : '💵 COD'}</div>
+        <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--pink-dark);margin-top:.5rem;">
+          ${formatVND(order.total || 0)}
+        </div>
+      </div>
+      ${order.note ? `<div style="margin-top:.75rem;font-size:.85rem;color:var(--gray-text);">Ghi chú: ${order.note}</div>` : ''}
+    </div>
+
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+      <button onclick="updateOrderStatus('${order.orderId}','confirmed')" class="btn-primary btn-sm" style="flex:1;justify-content:center;min-width:100px;">
+        <i class="fas fa-check"></i> Xác nhận
+      </button>
+      <button onclick="updateOrderStatus('${order.orderId}','completed')" class="btn-outline btn-sm" style="flex:1;justify-content:center;color:#388e3c;border-color:#a5d6a7;min-width:100px;">
+        <i class="fas fa-truck"></i> Đã giao
+      </button>
+      <button onclick="closeOrderPanel(); deleteOrder('${order.orderId}')" class="btn-sm" style="flex:1;justify-content:center;min-width:100px;background:#fce4ec;color:#b71c1c;border-radius:100px;border:none;">
+        <i class="fas fa-trash"></i> Xóa đơn
+      </button>
+    </div>
+  `;
+
+  document.getElementById('orderDetailPanel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('open');
+}
+
+function closeOrderPanel() {
+  document.getElementById('orderDetailPanel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+}
+
+/**
+ * SHOW ADMIN SECTION
+ */
+function showSection(section) {
+  ['dashboard', 'orders', 'products-admin', 'discounts'].forEach(s => {
+    const el = document.getElementById(`section-${s}`);
+    if (el) el.style.display = s === section ? 'block' : 'none';
+  });
+
+  // Update active nav link
+  document.querySelectorAll('.admin-nav a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === `#${section}`);
+  });
+
+  // Update topbar title
+  const titles = {
+    'dashboard':       '📊 Tổng quan',
+    'orders':          '📋 Quản lý đơn hàng',
+    'products-admin':  '👗 Sản phẩm'
+  };
+  document.getElementById('currentSectionTitle').textContent = titles[section] || '';
+}
+
+/**
+ * RENDER ADMIN PRODUCTS LIST
+ */
+function renderAdminProducts() {
+  const container = document.getElementById('adminProductsList');
+  if (!container) return;
+
+  container.innerHTML = PRODUCTS.map(p => `
+    <div style="background:var(--gray-soft);border-radius:var(--radius-md);padding:1rem;border:1px solid rgba(255,182,193,.2);">
+      <div style="font-weight:600;font-size:.9rem;margin-bottom:4px;">${p.name}</div>
+      <div style="font-size:.78rem;color:var(--gray-mid);margin-bottom:.5rem;">${getCategoryName(p.category)} • ID: ${p.id}</div>
+      <div style="font-size:.82rem;color:var(--pink-dark);">Thuê: ${formatVND(p.rentPrice)}/ngày</div>
+      <div style="font-size:.82rem;color:var(--gray-text);">Mua: ${formatVND(p.buyPrice)}</div>
+      <div style="font-size:.75rem;color:var(--gray-mid);margin-top:.5rem;">
+        📁 public/clothes/${p.folder}/
+      </div>
+    </div>
+  `).join('');
+}
+
+/**
+ * UPDATE NEW ORDER BADGE on sidebar
+ */
+function updateNewOrderBadge() {
+  const pending = allOrders.filter(o => o.status === 'pending').length;
+  const badge = document.getElementById('newOrderBadge');
+  if (badge) {
+    badge.textContent = pending;
+    badge.style.display = pending > 0 ? 'inline' : 'none';
+  }
+}
+
+/**
+ * REAL-TIME POLLING
+ * Check for new orders every 30 seconds
+ */
+function startPolling() {
+  setInterval(async () => {
+    const previousCount = allOrders.length;
+    await loadOrders();
+    const newCount = allOrders.length;
+
+    if (newCount > previousCount) {
+      // New order received!
+      const diff = newCount - previousCount;
+      showToast(`${diff} đơn hàng mới!`, 'Có đơn hàng mới cần xử lý.', 'fa-bell');
+
+      // Optional: play notification sound
+      try {
+        const audio = new AudioContext();
+        const osc = audio.createOscillator();
+        osc.connect(audio.destination);
+        osc.frequency.value = 880;
+        osc.start();
+        osc.stop(audio.currentTime + 0.15);
+      } catch(e) { /* silent */ }
+    }
+  }, 30000); // 30 seconds
+}
+
+// ── DISCOUNT TABLE ──
+let _allDiscountRows = [];
+
+async function loadDiscountTable() {
+  const tbody = document.getElementById('discountTableBody');
+  const count = document.getElementById('discountCount');
+  if (!tbody) return;
+
+  // Reset cache so it re-fetches
+  window._discountCache = null;
+
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-mid);"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+
+  const codes = await getAllDiscounts();
+  _allDiscountRows = codes;
+
+  if (codes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-mid);">Không có mã nào. Hãy thêm vào file discounts.txt</td></tr>';
+    return;
+  }
+
+  renderDiscountRows(codes);
+  if (count) count.textContent = `Tổng cộng: ${codes.length} mã giảm giá`;
+}
+
+function renderDiscountRows(codes) {
+  const tbody = document.getElementById('discountTableBody');
+  tbody.innerHTML = codes.map(c => `
+    <tr>
+      <td>
+        <code style="background:var(--pink-pale);padding:3px 10px;border-radius:6px;font-size:.88rem;color:var(--pink-dark);font-weight:600;letter-spacing:.04em;">${c.code}</code>
+      </td>
+      <td>
+        <span style="padding:3px 10px;border-radius:100px;font-size:.75rem;font-weight:600;${c.type === '%' ? 'background:#e8f5e9;color:#388e3c;' : 'background:#e3f2fd;color:#1565c0;'}">
+          ${c.type === '%' ? '% Phần trăm' : '₫ Cố định'}
+        </span>
+      </td>
+      <td style="font-weight:600;font-size:.95rem;">
+        ${c.type === '%' ? '<span style="color:#388e3c;">-' + c.value + '%</span>' : '<span style="color:#1565c0;">-' + formatVND(c.value) + '</span>'}
+      </td>
+      <td style="color:var(--gray-text);font-size:.88rem;">${c.description}</td>
+      <td>
+        <button onclick="testDiscountCode('${c.code}')"
+                style="background:var(--pink-pale);color:var(--pink-dark);border:none;padding:4px 12px;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:var(--font-body);">
+          <i class="fas fa-play"></i> Test
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterDiscountTable(query) {
+  const q = query.toLowerCase();
+  const filtered = _allDiscountRows.filter(c =>
+    c.code.toLowerCase().includes(q) ||
+    c.description.toLowerCase().includes(q)
+  );
+  renderDiscountRows(filtered);
+  const count = document.getElementById('discountCount');
+  if (count) count.textContent = `Hiển thị: ${filtered.length} / ${_allDiscountRows.length} mã`;
+}
+
+async function testDiscountCode(code) {
+  const testTotal = 500000; // test with 500k order
+  const result = await applyDiscountCode(code, testTotal);
+  if (result.valid) {
+    showToast(
+      `✅ ${code} hợp lệ`,
+      `Đơn 500.000đ → giảm ${formatVND(result.discount)} → còn ${formatVND(result.finalTotal)}`,
+      'fa-tag'
+    );
+  } else {
+    showToast('Mã lỗi!', result.message, 'fa-circle-exclamation', 'error');
+  }
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  loadOrders();
+  renderAdminProducts();
+  loadDiscountTable();
+  startPolling();
+});
+</script>
+
+</body>
+</html>

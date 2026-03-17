@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Environment variables (keep secret!)
+.env
+
+# Database (auto-generated)
+server/orders.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/settings.json
+*.swp

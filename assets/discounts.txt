@@ -1,0 +1,48 @@
+# ============================================================
+# SHOP GIA LINH - MÃ GIẢM GIÁ
+# ============================================================
+# CÁCH DÙNG:
+#   Mỗi dòng = 1 mã giảm giá
+#   Dòng bắt đầu bằng # là ghi chú (bị bỏ qua)
+#   Dòng trống cũng bị bỏ qua
+#
+# ĐỊNH DẠNG:
+#   MÃ | LOẠI | GIÁ TRỊ | MÔ TẢ
+#
+# LOẠI:
+#   %    = giảm theo phần trăm   (ví dụ: 10%)
+#   vnd  = giảm số tiền cố định  (ví dụ: 50000 VND)
+#
+# VÍ DỤ:
+#   HELLO10 | % | 10 | Giảm 10% cho khách mới
+#   FIXED50K | vnd | 50000 | Giảm cố định 50.000đ
+#
+# ============================================================
+
+# --- GIẢM THEO % ---
+GIALINH10   | %   | 10  | Giảm 10% - Mã thường
+GIALINH20   | %   | 20  | Giảm 20% - Khách thân thiết
+GIALINH30   | %   | 30  | Giảm 30% - Dịp đặc biệt
+GIALINH40   | %   | 40  | Giảm 40% - Flash sale
+GIALINH50   | %   | 50  | Giảm 50% - Khuyến mãi lớn
+GIALINH60   | %   | 60  | Giảm 60% - Clearance
+NEWCUST15   | %   | 15  | Giảm 15% - Khách hàng mới
+VIP25       | %   | 25  | Giảm 25% - Khách VIP
+BIRTHDAY30  | %   | 30  | Giảm 30% - Sinh nhật
+TETHOLIDAY  | %   | 20  | Giảm 20% - Tết
+SUMMER35    | %   | 35  | Giảm 35% - Hè 2025
+
+# --- GIẢM SỐ TIỀN CỐ ĐỊNH ---
+GIAM5K      | vnd | 5000    | Giảm 5.000đ
+GIAM10K     | vnd | 10000   | Giảm 10.000đ
+GIAM20K     | vnd | 20000   | Giảm 20.000đ
+GIAM50K     | vnd | 50000   | Giảm 50.000đ
+GIAM100K    | vnd | 100000  | Giảm 100.000đ
+GIAM150K    | vnd | 150000  | Giảm 150.000đ
+GIAM200K    | vnd | 200000  | Giảm 200.000đ
+FREESHIP    | vnd | 30000   | Miễn phí ship (30k)
+WELCOME     | vnd | 50000   | Quà tặng chào mừng 50k
+THUE5NGAY  | vnd | 100000  | Thuê 5 ngày giảm 100k
+
+# --- MÃ ĐẶC BIỆT (chỉ chia sẻ cho người thân) ---
+GIALINHLOVE | %   | 50  | Mã đặc biệt VIP
