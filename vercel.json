@@ -36,12 +36,12 @@
       "dest": "/public/$1"
     },
     {
-      "src": "/pages/(.*)",
-      "dest": "/pages/$1"
+      "src": "/(.*)",
+      "dest": "/$1"
     },
     {
       "src": "/",
-      "dest": "/pages/index.html"
+      "dest": "/index.html"
     }
   ]
 }
