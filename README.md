@@ -1,4 +1,4 @@
-# 💓 Shop Gia Linh — Website Thời Trang Nữ
+# 💓 SHOP CLOTHES — Website Thời Trang Nữ
 
 Website thuê và mua trang phục nữ cao cấp. Phong cách thanh lịch, giá phải chăng.
 
