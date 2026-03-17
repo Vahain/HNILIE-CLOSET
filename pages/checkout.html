@@ -126,6 +126,7 @@
                 <option value="HN" selected>TP. Hà Nội</option>
                 <option value="HCM">TP. Hồ Chí Minh</option>
                 <option value="DN">Đà Nẵng</option>
+                <option value="TH">Thanh Hoá</option>
                 <option value="CT">Cần Thơ</option>
                 <option value="HP">Hải Phòng</option>
                 <option value="BD">Bình Dương</option>
@@ -319,7 +320,7 @@
 
       <p style="font-size:.85rem;color:var(--gray-text);margin-bottom:1.5rem;">
         Shop sẽ liên hệ với bạn trong vòng <strong>30 phút</strong> để xác nhận đơn hàng.<br>
-        Hotline: <a href="tel:0962471234" style="color:var(--pink-dark);">0964583100 hoặc 0359906383</a>
+        Hotline: <a href="tel:0964583100" style="color:var(--pink-dark);">0964583100 hoặc 0359906383</a>
       </p>
 
       <a href="/pages/index.html" class="btn-primary" style="display:inline-flex;">
@@ -552,7 +553,7 @@ async function placeOrder() {
 
     if (selectedPayment === 'bank') {
       document.getElementById('successPayNote').innerHTML = `
-        <strong>Chuyển khoản MBBANK: 0962471234</strong><br>
+        <strong>Chuyển khoản ViettinBank: 100882213542</strong><br>
         Nội dung: <span style="color:var(--pink-dark);font-weight:600;">${orderId}</span>
       `;
     } else {
