@@ -53,15 +53,44 @@
       50% { opacity: .5; transform: scale(.7); }
     }
 
-    .action-btns { display: flex; gap: 8px; }
+    /* ── FIX: action buttons — no overlap, no wrap ── */
+    .action-btns {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
     .action-btn {
-      padding: 5px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
       border-radius: 6px;
       font-size: .78rem;
       font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
+      border: none;
+      flex-shrink: 0;
     }
+
+    /* Override for filter/toolbar buttons that need text */
+    .action-btn.text-btn {
+      width: auto;
+      padding: 5px 12px;
+    }
+
+    /* ── FIX: table action column — reserve enough room ── */
+    .orders-table td:last-child,
+    .orders-table th:last-child {
+      white-space: nowrap;
+      min-width: 160px;
+    }
+
     .btn-confirm { background: #e8f5e9; color: #388e3c; }
     .btn-confirm:hover { background: #c8e6c9; }
     .btn-cancel  { background: #fce4ec; color: #c62828; }
@@ -94,9 +123,8 @@
 <body>
 <script>
 const pass = prompt("🔐 Nhập mật khẩu admin:");
-
 if(pass !== "0407152006"){
-  window.location.href = "/index.html"; // đá về trang chủ
+  window.location.href = "/index.html";
 }
 </script>
 
@@ -106,10 +134,10 @@ if(pass !== "0407152006"){
   <!-- ── SIDEBAR ── -->
   <aside class="admin-sidebar">
     <div class="admin-logo" style="display:flex;align-items:center;gap:10px;margin-bottom:0;">
-  <img src="/assets/images/logo.png" alt="logo"
-       style="height:40px;width:40px;object-fit:contain;border-radius:50%;flex-shrink:0;">
-  <span>Hnilie Closet</span>
-</div>
+      <img src="/assets/images/logo.png" alt="logo"
+           style="height:40px;width:40px;object-fit:contain;border-radius:50%;flex-shrink:0;">
+      <span>Hnilie Closet</span>
+    </div>
     <div class="admin-logo-sub">Quản trị viên</div>
 
     <ul class="admin-nav">
@@ -206,19 +234,19 @@ if(pass !== "0407152006"){
         <h2 style="font-family:var(--font-display);font-size:1.5rem;">Quản lý đơn hàng</h2>
 
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-          <!-- Filter tabs -->
-          <button class="action-btn" style="background:var(--pink-pale);color:var(--pink-dark);" onclick="filterOrders('all')">Tất cả</button>
-          <button class="action-btn btn-confirm" onclick="filterOrders('pending')">Chờ xử lý</button>
-          <button class="action-btn" style="background:#e3f2fd;color:#1565c0;" onclick="filterOrders('confirmed')">Đã xác nhận</button>
-          <button class="action-btn btn-cancel" onclick="filterOrders('cancelled')">Đã hủy</button>
+          <!-- Filter tabs — use text-btn class for text buttons -->
+          <button class="action-btn text-btn" style="background:var(--pink-pale);color:var(--pink-dark);" onclick="filterOrders('all')">Tất cả</button>
+          <button class="action-btn text-btn btn-confirm" onclick="filterOrders('pending')">Chờ xử lý</button>
+          <button class="action-btn text-btn" style="background:#e3f2fd;color:#1565c0;" onclick="filterOrders('confirmed')">Đã xác nhận</button>
+          <button class="action-btn text-btn btn-cancel" onclick="filterOrders('cancelled')">Đã hủy</button>
           <!-- Danger zone -->
           <div style="width:1px;background:var(--gray-soft);margin:0 4px;"></div>
-          <button class="action-btn" style="background:#fce4ec;color:#b71c1c;font-weight:600;"
+          <button class="action-btn text-btn" style="background:#fce4ec;color:#b71c1c;font-weight:600;"
                   onclick="deleteAllCancelled()" title="Xóa tất cả đơn đã hủy">
             <i class="fas fa-broom"></i> Xóa đơn đã hủy
           </button>
-          <button class="action-btn" style="background:#ffebee;color:#b71c1c;border:1px dashed #ef9a9a;"
-                  onclick="deleteAllOrders()" title="Xóa TOÀN BỘ đơn hàng (chỉ dùng để xóa test)">
+          <button class="action-btn text-btn" style="background:#ffebee;color:#b71c1c;border:1px dashed #ef9a9a;"
+                  onclick="deleteAllOrders()" title="Xóa TOÀN BỘ đơn hàng">
             <i class="fas fa-trash-can"></i> Xóa tất cả
           </button>
         </div>
@@ -242,20 +270,17 @@ if(pass !== "0407152006"){
     <div id="section-products-admin" style="display:none;">
       <div style="margin-top:1.5rem;">
         <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:1.5rem;">Danh sách sản phẩm</h2>
-
         <div style="background:white;border-radius:var(--radius-md);padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);">
           <p style="color:var(--gray-text);margin-bottom:1.5rem;font-size:.9rem;">
             <i class="fas fa-circle-info" style="color:var(--pink-mid);"></i>
             Để thêm sản phẩm mới: tạo thư mục trong <code>public/clothes/</code> và thêm vào <code>assets/js/products.js</code>
           </p>
-
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;" id="adminProductsList">
             <!-- Products rendered by JS -->
           </div>
         </div>
       </div>
     </div>
-
 
     <!-- ─────────── DISCOUNTS SECTION ─────────── -->
     <div id="section-discounts" style="display:none;">
@@ -266,7 +291,6 @@ if(pass !== "0407152006"){
         </a>
       </div>
 
-      <!-- How to add guide -->
       <div style="background:white;border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);">
         <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:1rem;">
           <i class="fas fa-circle-info" style="color:var(--pink-mid);"></i> Cách thêm mã giảm giá
@@ -286,7 +310,6 @@ if(pass !== "0407152006"){
         </div>
       </div>
 
-      <!-- Live discount codes table -->
       <div style="background:white;border-radius:var(--radius-md);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);">
         <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--gray-soft);display:flex;justify-content:space-between;align-items:center;">
           <span style="font-weight:600;font-size:.9rem;">Danh sách mã hiện tại</span>
@@ -294,15 +317,12 @@ if(pass !== "0407152006"){
             <i class="fas fa-rotate-right"></i> Làm mới
           </button>
         </div>
-
-        <!-- Search filter -->
         <div style="padding:.75rem 1.5rem;border-bottom:1px solid var(--gray-soft);">
           <input type="text" id="discountSearch" class="form-control"
                  placeholder="Tìm mã giảm giá..."
                  style="max-width:300px;"
                  oninput="filterDiscountTable(this.value)">
         </div>
-
         <div id="discountTableWrap" style="overflow-x:auto;">
           <table class="orders-table" id="discountTable">
             <thead>
@@ -321,13 +341,12 @@ if(pass !== "0407152006"){
             </tbody>
           </table>
         </div>
-
         <div id="discountCount" style="padding:.75rem 1.5rem;font-size:.8rem;color:var(--gray-mid);border-top:1px solid var(--gray-soft);"></div>
       </div>
     </div>
 
-  </main><!-- end admin-main -->
-</div><!-- end admin-layout -->
+  </main>
+</div>
 
 <!-- ─────────── ORDER DETAIL PANEL ─────────── -->
 <div class="panel-overlay" id="panelOverlay" onclick="closeOrderPanel()"></div>
@@ -339,9 +358,7 @@ if(pass !== "0407152006"){
         <i class="fas fa-xmark"></i>
       </button>
     </div>
-    <div id="orderDetailContent">
-      <!-- Populated by openOrderDetail() -->
-    </div>
+    <div id="orderDetailContent"></div>
   </div>
 </div>
 
@@ -359,10 +376,75 @@ if(pass !== "0407152006"){
  * ── ADMIN PANEL JAVASCRIPT ──
  */
 
+// ── Store all orders ──
+let allOrders = [];
+let filteredOrders = [];
+
+/**
+ * INTERNAL: re-render both tables and stats from current in-memory arrays.
+ * Call this instead of loadOrders() when you already have the correct data
+ * and don't want a network round-trip (avoids the disappearing-order bug).
+ */
+function _rerender() {
+  updateStats();
+  renderOrdersTable(filteredOrders, 'dashboardOrdersTable', 5);
+  renderOrdersTable(filteredOrders, 'fullOrdersTable');
+  updateNewOrderBadge();
+}
+
+/**
+ * LOAD ORDERS FROM SERVER OR LOCAL STORAGE
+ * Only used on initial page load, polling, and manual "Làm mới".
+ * Do NOT call this after status updates — use _rerender() instead.
+ */
+async function loadOrders() {
+  try {
+    const res = await axios.get('/api/orders');
+    allOrders = res.data.orders || [];
+  } catch (err) {
+    allOrders = JSON.parse(localStorage.getItem('glOrders') || '[]');
+  }
+
+  filteredOrders = [...allOrders];
+  _rerender();
+}
+
+/**
+ * UPDATE ORDER STATUS
+ *
+ * BUG FIX: The original code called loadOrders() after firing axios.patch
+ * without awaiting it. loadOrders() would re-fetch from the server before
+ * the PATCH completed, returning stale data and making orders disappear.
+ *
+ * Fix: update the in-memory arrays directly, persist to localStorage,
+ * fire the PATCH in the background, then call _rerender() — no re-fetch.
+ */
+async function updateOrderStatus(orderId, newStatus) {
+  // 1. Update in allOrders
+  const idx = allOrders.findIndex(o => o.orderId === orderId);
+  if (idx === -1) return;
+  allOrders[idx] = { ...allOrders[idx], status: newStatus };
+
+  // 2. Update in filteredOrders (so the current view stays consistent)
+  const fidx = filteredOrders.findIndex(o => o.orderId === orderId);
+  if (fidx !== -1) {
+    filteredOrders[fidx] = { ...filteredOrders[fidx], status: newStatus };
+  }
+
+  // 3. Persist to localStorage immediately
+  localStorage.setItem('glOrders', JSON.stringify(allOrders));
+
+  // 4. Fire API update in background — intentionally NOT awaited
+  axios.patch(`/api/orders/${orderId}`, { status: newStatus }).catch(() => {});
+
+  // 5. Re-render from local state (no network fetch = no disappearing orders)
+  _rerender();
+
+  showToast('Cập nhật!', `Đơn ${orderId} → ${getStatusLabel(newStatus)}`, 'fa-check-circle');
+}
 
 /**
  * DELETE SINGLE ORDER
- * Shows a confirmation dialog before deleting
  */
 async function deleteOrder(orderId) {
   const confirmed = window.confirm(`Bạn có chắc muốn xóa đơn hàng ${orderId} không?\n\nHành động này không thể hoàn tác.`);
@@ -370,22 +452,19 @@ async function deleteOrder(orderId) {
 
   try {
     await axios.delete(`/api/orders/${orderId}`);
-  } catch (err) {
-    // Fallback: delete from localStorage
-  }
+  } catch (err) {}
 
-  // Also remove from localStorage
-  let stored = JSON.parse(localStorage.getItem('glOrders') || '[]');
-  stored = stored.filter(o => o.orderId !== orderId);
-  localStorage.setItem('glOrders', JSON.stringify(stored));
+  // Remove from both arrays + localStorage
+  allOrders = allOrders.filter(o => o.orderId !== orderId);
+  filteredOrders = filteredOrders.filter(o => o.orderId !== orderId);
+  localStorage.setItem('glOrders', JSON.stringify(allOrders));
 
+  _rerender();
   showToast('Đã xóa!', `Đơn hàng ${orderId} đã được xóa.`, 'fa-trash');
-  await loadOrders();
 }
 
 /**
  * DELETE ALL CANCELLED ORDERS
- * Removes only orders with status = "cancelled"
  */
 async function deleteAllCancelled() {
   const cancelled = allOrders.filter(o => o.status === 'cancelled');
@@ -401,18 +480,16 @@ async function deleteAllCancelled() {
     try { await axios.delete(`/api/orders/${order.orderId}`); } catch(e) {}
   }
 
-  // Update localStorage
-  let stored = JSON.parse(localStorage.getItem('glOrders') || '[]');
-  stored = stored.filter(o => o.status !== 'cancelled');
-  localStorage.setItem('glOrders', JSON.stringify(stored));
+  allOrders = allOrders.filter(o => o.status !== 'cancelled');
+  filteredOrders = filteredOrders.filter(o => o.status !== 'cancelled');
+  localStorage.setItem('glOrders', JSON.stringify(allOrders));
+  _rerender();
 
   showToast('Đã xóa!', `Đã xóa ${cancelled.length} đơn hàng đã hủy.`, 'fa-broom');
-  await loadOrders();
 }
 
 /**
  * DELETE ALL ORDERS
- * ⚠️ Use only to clear test data — asks for confirmation twice
  */
 async function deleteAllOrders() {
   if (allOrders.length === 0) {
@@ -430,35 +507,12 @@ async function deleteAllOrders() {
     try { await axios.delete(`/api/orders/${order.orderId}`); } catch(e) {}
   }
 
-  // Clear localStorage
+  allOrders = [];
+  filteredOrders = [];
   localStorage.setItem('glOrders', '[]');
+  _rerender();
 
   showToast('Đã xóa tất cả!', 'Toàn bộ đơn hàng đã được xóa.', 'fa-trash-can');
-  await loadOrders();
-}
-
-// Store all orders
-let allOrders = [];
-let filteredOrders = [];
-
-/**
- * LOAD ORDERS FROM SERVER OR LOCAL STORAGE
- */
-async function loadOrders() {
-  try {
-    // Try fetching from the Node.js API
-    const res = await axios.get('/api/orders');
-    allOrders = res.data.orders || [];
-  } catch (err) {
-    // Fallback: load from localStorage (when server is not running)
-    allOrders = JSON.parse(localStorage.getItem('glOrders') || '[]');
-  }
-
-  filteredOrders = [...allOrders];
-  updateStats();
-  renderOrdersTable(filteredOrders, 'dashboardOrdersTable', 5);
-  renderOrdersTable(filteredOrders, 'fullOrdersTable');
-  updateNewOrderBadge();
 }
 
 /**
@@ -475,7 +529,6 @@ function updateStats() {
   document.getElementById('statCompleted').textContent = completed;
   document.getElementById('statRevenue').textContent   = formatVND(revenue);
 
-  // Show badge on sidebar if pending orders exist
   const badge = document.getElementById('newOrderBadge');
   if (pending > 0) {
     badge.textContent = pending;
@@ -487,9 +540,8 @@ function updateStats() {
 
 /**
  * RENDER ORDERS TABLE
- * @param orders   - array of orders to display
- * @param targetId - ID of the container element
- * @param limit    - max rows to show (optional)
+ * BUG FIX: added overflow-x:auto wrapper and min-width on table
+ * so the action column never squishes and buttons never overlap.
  */
 function renderOrdersTable(orders, targetId, limit = null) {
   const container = document.getElementById(targetId);
@@ -507,8 +559,8 @@ function renderOrdersTable(orders, targetId, limit = null) {
   }
 
   container.innerHTML = `
-    <div class="orders-table-wrap">
-      <table class="orders-table">
+    <div class="orders-table-wrap" style="overflow-x:auto;">
+      <table class="orders-table" style="min-width:780px;width:100%;">
         <thead>
           <tr>
             <th>Mã đơn</th>
@@ -518,7 +570,7 @@ function renderOrdersTable(orders, targetId, limit = null) {
             <th>Tổng tiền</th>
             <th>Thanh toán</th>
             <th>Trạng thái</th>
-            <th>Thao tác</th>
+            <th style="min-width:160px;white-space:nowrap;">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -533,7 +585,7 @@ function renderOrdersTable(orders, targetId, limit = null) {
               <td><strong>${formatVND(order.total || 0)}</strong></td>
               <td>${order.payment === 'bank' ? '🏦 Chuyển khoản' : '💵 COD'}</td>
               <td><span class="order-status status-${order.status || 'pending'}">${getStatusLabel(order.status)}</span></td>
-              <td>
+              <td style="white-space:nowrap;">
                 <div class="action-btns">
                   <button class="action-btn" style="background:var(--pink-pale);color:var(--pink-dark);"
                           onclick="openOrderDetail('${order.orderId}')" title="Xem chi tiết">
@@ -580,7 +632,6 @@ function filterOrders(status) {
   filteredOrders = status === 'all'
     ? [...allOrders]
     : allOrders.filter(o => o.status === status);
-
   renderOrdersTable(filteredOrders, 'fullOrdersTable');
 }
 
@@ -595,28 +646,6 @@ function searchOrders(query) {
     (o.customer?.phone || '').toLowerCase().includes(q)
   );
   renderOrdersTable(filteredOrders, 'fullOrdersTable');
-}
-
-/**
- * UPDATE ORDER STATUS (local only — extend with API call for real backend)
- */
-function updateOrderStatus(orderId, newStatus) {
-  const order = allOrders.find(o => o.orderId === orderId);
-  if (!order) return;
-
-  order.status = newStatus;
-
-  // Save back to localStorage
-  localStorage.setItem('glOrders', JSON.stringify(allOrders));
-
-  // Also attempt API update
-  axios.patch(`/api/orders/${orderId}`, { status: newStatus })
-    .catch(() => {}); // Silent fail if server is offline
-
-  const label = getStatusLabel(newStatus);
-  showToast('Cập nhật!', `Đơn ${orderId} → ${label}`, 'fa-check-circle');
-
-  loadOrders(); // Refresh table
 }
 
 /**
@@ -671,10 +700,10 @@ function openOrderDetail(orderId) {
     </div>
 
     <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
-      <button onclick="updateOrderStatus('${order.orderId}','confirmed')" class="btn-primary btn-sm" style="flex:1;justify-content:center;min-width:100px;">
+      <button onclick="updateOrderStatus('${order.orderId}','confirmed'); closeOrderPanel();" class="btn-primary btn-sm" style="flex:1;justify-content:center;min-width:100px;">
         <i class="fas fa-check"></i> Xác nhận
       </button>
-      <button onclick="updateOrderStatus('${order.orderId}','completed')" class="btn-outline btn-sm" style="flex:1;justify-content:center;color:#388e3c;border-color:#a5d6a7;min-width:100px;">
+      <button onclick="updateOrderStatus('${order.orderId}','completed'); closeOrderPanel();" class="btn-outline btn-sm" style="flex:1;justify-content:center;color:#388e3c;border-color:#a5d6a7;min-width:100px;">
         <i class="fas fa-truck"></i> Đã giao
       </button>
       <button onclick="closeOrderPanel(); deleteOrder('${order.orderId}')" class="btn-sm" style="flex:1;justify-content:center;min-width:100px;background:#fce4ec;color:#b71c1c;border-radius:100px;border:none;">
@@ -701,12 +730,10 @@ function showSection(section) {
     if (el) el.style.display = s === section ? 'block' : 'none';
   });
 
-  // Update active nav link
   document.querySelectorAll('.admin-nav a').forEach(a => {
     a.classList.toggle('active', a.getAttribute('href') === `#${section}`);
   });
 
-  // Update topbar title
   const titles = {
     'dashboard':       '📊 Tổng quan',
     'orders':          '📋 Quản lý đơn hàng',
@@ -748,8 +775,7 @@ function updateNewOrderBadge() {
 }
 
 /**
- * REAL-TIME POLLING
- * Check for new orders every 30 seconds
+ * REAL-TIME POLLING — checks every 30 seconds for new orders
  */
 function startPolling() {
   setInterval(async () => {
@@ -758,11 +784,8 @@ function startPolling() {
     const newCount = allOrders.length;
 
     if (newCount > previousCount) {
-      // New order received!
       const diff = newCount - previousCount;
       showToast(`${diff} đơn hàng mới!`, 'Có đơn hàng mới cần xử lý.', 'fa-bell');
-
-      // Optional: play notification sound
       try {
         const audio = new AudioContext();
         const osc = audio.createOscillator();
@@ -770,9 +793,9 @@ function startPolling() {
         osc.frequency.value = 880;
         osc.start();
         osc.stop(audio.currentTime + 0.15);
-      } catch(e) { /* silent */ }
+      } catch(e) {}
     }
-  }, 30000); // 30 seconds
+  }, 30000);
 }
 
 // ── DISCOUNT TABLE ──
@@ -783,9 +806,7 @@ async function loadDiscountTable() {
   const count = document.getElementById('discountCount');
   if (!tbody) return;
 
-  // Reset cache so it re-fetches
   window._discountCache = null;
-
   tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-mid);"><i class="fas fa-spinner fa-spin"></i> Đang tải...</td></tr>';
 
   const codes = await getAllDiscounts();
@@ -838,7 +859,7 @@ function filterDiscountTable(query) {
 }
 
 async function testDiscountCode(code) {
-  const testTotal = 500000; // test with 500k order
+  const testTotal = 500000;
   const result = await applyDiscountCode(code, testTotal);
   if (result.valid) {
     showToast(
